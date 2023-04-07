@@ -1,21 +1,18 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const count = ref(0)
-</script>
-
 <template>
   <div id="error">
-    <h2>ERROR</h2>
-    <p>알수없는 오류가 발생했습니다.</p>
+    <h2>Error</h2>
+    <p>알수 없는 에러가 발생했습니다.</p>
     <p><router-link to="/">홈으로</router-link></p>
   </div>
 </template>
 
+<script setup lang="ts">
+
+</script>
 
 <!-- eslint-disable prettier/prettier -->
 <style scoped>
-#error {width:80%; height:80%; font-size:20px; position:fixed; text-align:center; left:10%; top:10%; background:#aaa; border-radius:10px;}
+#error {width:60%; height:70%; font-size:20px; position:fixed; text-align:center; left:20%; top:15%; background:#f1f1f1; border-radius:10px;}
 #error h1 {padding:100px 0 30px 0;}
 #error h1 img {width:100px;}
 #error h2 {color:#333; font-size:40px; padding:30px 0; font-weight:bold;}

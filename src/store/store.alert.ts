@@ -1,26 +1,20 @@
-/* eslint-disable no-debugger */
-export const alert = {
-  namespaced: true,
-  state: {
+import { defineStore } from 'pinia';
+
+export const useAlertStore = defineStore('alert', {
+  state : () => ({ 
     active: false,
-    info: null,
-  },
-  actions: {
-    open({ commit }:any, info:any) {
-      commit("open", info)
-    },
-    close({ commit }:any) {
-      commit("close")
-    },
-  },
-  mutations: {
-    open(state:any, payload:any) {
-      state.info = payload
-      state.active = true
-    },
-    close(state:any) {
-      state.info = null
-      state.active = false
-    },
-  },
-};
+    info: {},
+  }),
+	actions: {
+		open(info:object) {
+      let $scope = this;
+			$scope.active = true;
+      $scope.info = info;
+		},
+    close() {
+			this.active = false;
+      this.info = {};
+		},
+	}
+});
+

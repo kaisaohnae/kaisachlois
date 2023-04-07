@@ -3,7 +3,7 @@
     <form v-on:submit.prevent="submitForm()" method="POST" ref="login">
       <fieldset>
         <legend>로그인</legend>
-        <h2>로그인</h2>
+        <h1>Administrator</h1>
         <label class="label">
           <span class="icon">&#xe809;</span>
           <input type="text" v-model="param.id" name="id" placeholder="아이디를 입력해주세요" required />
@@ -22,8 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
-import { getUserLogin } from '../utils/api';
+import { reactive } from 'vue';
+import { useAlertStore } from '../store/store.alert';
+import { useAuthStore } from '../store/store.auth';
+import { useRouter } from 'vue-router';
+import UserService from '../service/auth/UserService';
+import { useCookies } from "vue3-cookies";
+
+const { cookies } = useCookies();
+const alert = useAlertStore();
+const auth = useAuthStore();
+const router = useRouter();
 
 interface LoginInfo {
   id: string;
@@ -31,10 +40,12 @@ interface LoginInfo {
   remember: boolean;
 }
 
+const cookieId = cookies.get('id') || '';
+
 const param = reactive<LoginInfo>({
-  id: 'admin3',
+  id: cookieId,
   password: '',
-  remember: true,
+  remember: (cookieId) ? true : false,
 });
 
 const submitForm = () => {
@@ -42,21 +53,35 @@ const submitForm = () => {
   formData.append('id', param.id);
   formData.append('password', param.password);
   formData.append('remember', param.remember + '');
-  
-  getUserLogin(formData).then(res => {
-		console.log(res);
-	});
 
+  if(param.remember){
+    cookies.set('id', param.id);
+  } else {
+    cookies.remove('id');
+  }
+  
+  UserService.getUserLogin(formData).then(
+    (res) => {
+      if(res && res.success) {
+        auth.loginSuccess(res.data);
+      } else {
+        auth.loginFail();
+        alert.open({title: null, message: '(' + auth.count + ') ' + res.message});
+      }
+    },
+    (err) => {
+      console.log(err);
+    },
+  );
 };
+
 </script>
 
 <style scoped>
-#login {width:100%; height:100%;}
-#login h1 {text-align:center; padding-top:80px;}
-#login h1 img {width:80px;}
+#login {width:100%; height:100%; padding-top:100px;}
 #login form {width:400px; margin:0 auto; border-radius:10px; overflow:hidden; background:#fff;}
 #login form fieldset {width:100%; padding:30px 0;}
-#login form fieldset h2 {text-align:center; padding:20px 0; font-size:14px; color:#333;}
+#login form fieldset h1 {text-align:center; padding:20px 0; font-size:14px; color:#333;}
 #login form fieldset img {width:50px; display:block; margin:0 auto;}
 #login form fieldset img {width:50px; display:block; margin:0 auto;}
 #login form fieldset label {width:80%; margin:10px auto; display: block; padding:5px;}

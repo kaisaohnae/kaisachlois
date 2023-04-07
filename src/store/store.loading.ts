@@ -6,7 +6,7 @@ export const useLoadingStore = defineStore('loading', {
 		start() {
 			this.active = true;
 		},
-    end() {
+    	end() {
 			this.active = false;
 		},
 	}

@@ -1,9 +1,9 @@
 <template>
   <div id="home">
-    <ul>
+    <!--<ul>
       <li @click="router.push('/')">main</li>
       <li @click="router.push('/sub')">sub</li>
-    </ul>
+    </ul>-->
   </div>
   
 </template>
